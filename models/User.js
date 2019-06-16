@@ -1,30 +1,29 @@
-const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
-
+const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate");
 
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
     required: true,
-    trim: true,
+    trim: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   roles: {
     admin: {
       type: Boolean,
-      required: false,
-    },
-  },
+      required: false
+    }
+  }
 });
 
-
-UserSchema.pre('save', function (next) {
-  if (this.password.length === 60 && this.password[0] === '$') { // already encrypted
+UserSchema.pre("save", function(next) {
+  if (this.password.length === 60 && this.password[0] === "$") {
+    // already encrypted
     return next();
   }
 
@@ -37,8 +36,7 @@ UserSchema.pre('save', function (next) {
   });
 });
 
-
-UserSchema.statics.authenticate = function (email, password, cb) {
+UserSchema.statics.authenticate = function(email, password, cb) {
   this.findOne({ email }, (err, user) => {
     if (err) {
       return cb(500);
@@ -57,16 +55,13 @@ UserSchema.statics.authenticate = function (email, password, cb) {
   });
 };
 
-
-UserSchema.statics.findByIdOrEmail = function (emailOrId, cb) {
-  if (emailOrId.split('@').length === 2) {
+UserSchema.statics.findByIdOrEmail = function(emailOrId, cb) {
+  if (emailOrId.split("@").length === 2) {
     return this.findOne({ email: emailOrId }, cb);
   }
   return this.findById(emailOrId, cb);
 };
 
-
 UserSchema.plugin(mongoosePaginate);
 
-
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

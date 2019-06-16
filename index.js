@@ -1,30 +1,39 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const config = require('./config');
-const authMiddleware = require('./middleware/auth');
-const errorHandler = require('./middleware/error');
-const routes = require('./routes');
-const pkg = require('./package.json');
+const express = require("express");
+const mongoose = require("mongoose");
+const config = require("./config");
+const authMiddleware = require("./middleware/auth");
+const errorHandler = require("./middleware/error");
+const routes = require("./routes");
+const pkg = require("./package.json");
 
 
 const { port, mongoUrl, secret } = config;
 const app = express();
 
-
 // Conectar aplicación a MongoDB
-mongoose.connect(mongoUrl, { useNewUrlParser: true });
 
+mongoose.connect(
+  mongoUrl,
+  { useNewUrlParser: true, useCreateIndex: true },
+  err => {
+    if (err) {
+      return err;
+    }
+    console.log("Coonectado con Mongo");
+  }
+);
 
-app.set('config', config);
-app.set('pkg', pkg);
+mongoose.set('useFindAndModify', false);
 
+app.use(express.urlencoded({ extended: true }));
+app.set("config", config);
+app.set("pkg", pkg);
 
 app.use(express.json());
 app.use(authMiddleware(secret));
 
-
 // Registrar rutas
-routes(app, (err) => {
+routes(app, err => {
   if (err) {
     throw err;
   }

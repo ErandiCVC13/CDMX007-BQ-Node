@@ -59,6 +59,5 @@ module.exports = (app, next) => {
       }
     );
   });
-
   return next();
 };

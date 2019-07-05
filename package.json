@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "pretest": "eslint .",
     "test": "jest --verbose --testPathIgnorePatterns e2e",
     "start": "nodemon index.js",
     "e2e": "jest --verbose --testPathPattern e2e --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",

@@ -17,13 +17,13 @@ module.exports = (app, next) => {
   });
 
   app.post("/orders", requireAdmin, (req, resp) => {
-    const { name, price } = req.body;
+    const { items, status } = req.body;
 
-    if (!name || !price) {
+    if (!items) {
       return next(400);
     }
 
-    Order.create({ name, price })
+    Order.create({ items, status })
       // .then(() => Product.find())
       .then(data => resp.json(data))
       .catch(err =>
